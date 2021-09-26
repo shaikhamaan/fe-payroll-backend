@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model Employee{
+  rfid_card_no String @unique 
+  employee_code String @unique 
+  employee_name String
+  entry_made_on String
+  entry_added_by String 
+  employee_grade String
+  work_location String
+  vehicle_group String
+  experience_status String
+  years_of_experience String
+  education String
+  mobile_no String
+  mobile_relation String
+  whatsapp_status String 
+  emergency_contact String
+  emergency_person_relation String
+  emergency_contact_no String
+  bank_account_name String
+  account_relation String
+  bank_name String
+  bank_account_no String
+  bank_ifsc_code String
+  bank_branch String
+  aadhar_no String
+  pay_scale_term String
+  pay_scale Int
+  pay_scale_type String
+  payscale_per_hour Int 
+
+}
