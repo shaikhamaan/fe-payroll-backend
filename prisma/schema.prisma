@@ -42,3 +42,15 @@ model Employee{
   payscale_per_hour Int 
 
 }
+
+
+model Attendance{
+  id Int @default(autoincrement()) @id
+  tmno Int
+  employee_code String
+  employee_name String
+  gmno Int 
+  mode Int
+  date String
+  time String
+}
