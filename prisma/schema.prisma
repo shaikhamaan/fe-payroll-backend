@@ -16,6 +16,7 @@ model Employee{
   employee_code String @unique 
   employee_name String
   entry_made_on String
+  employee_photo String
   entry_added_by String 
   employee_grade String
   work_location String
@@ -32,6 +33,7 @@ model Employee{
   bank_account_name String
   account_relation String
   bank_name String
+  passbook_photo String
   bank_account_no String
   bank_ifsc_code String
   bank_branch String
