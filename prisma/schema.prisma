@@ -33,10 +33,10 @@ model Employee{
   bank_account_name String
   account_relation String
   bank_name String
-  passbook_photo String
   bank_account_no String
   bank_ifsc_code String
   bank_branch String
+  passbook_photo String
   aadhar_no String
   pay_scale_term String
   pay_scale Int
