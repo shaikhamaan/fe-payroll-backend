@@ -11,8 +11,11 @@ generator client {
 }
 
 
+
+
 model Employee{
-  rfid_card_no String @unique 
+  id Int @default(autoincrement()) @id
+  rfid_card_no String @default("S")
   employee_code String @unique 
   employee_name String
   entry_made_on String
@@ -39,9 +42,9 @@ model Employee{
   passbook_photo String
   aadhar_no String
   pay_scale_term String
-  pay_scale Int
+  pay_scale String
   pay_scale_type String
-  payscale_per_hour Int 
+  payscale_per_hour String 
 
 }
 
