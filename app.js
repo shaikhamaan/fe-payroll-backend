@@ -33,11 +33,11 @@ app.post('/', async (req, res) => {
     })
 
     console.log('Added');
-    res.json({message:"User Added Successfully",data: user})
+    res.json({status:"success", message:"Employee Added Successfully",data: user})
   }
   catch (err) {
     console.log(err);
-    res.send({message:"Something is wrong",error:err})
+    res.send({status:"error", message:"Something is Wrong",error:err})
   }
 })
 
@@ -51,8 +51,8 @@ app.delete('/:id', async (req, res) => {
 
 })
 
+const port = process.env.PORT || 3000;
 
-
-app.listen(5000, () => {
+app.listen(port, () => {
   console.log('Server Started');
 })
