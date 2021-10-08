@@ -14,8 +14,14 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 app.get('/', async (req, res) => {
-  const users = await prisma.employee.findMany()
-  res.json(users)
+  try{
+    const users = await prisma.employee.findMany()
+    res.json(users)
+  }
+  catch(error)
+  {
+    res.json(error)
+  }
 })
 
 
@@ -51,7 +57,7 @@ app.delete('/:id', async (req, res) => {
 
 })
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log('Server Started');
