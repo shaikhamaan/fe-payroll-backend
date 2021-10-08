@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url = env("DATABASE_URL")
 }
 
@@ -21,6 +21,7 @@ model Employee{
   entry_made_on String
   employee_photo String
   entry_added_by String 
+
   employee_grade String
   work_location String
   vehicle_group String
