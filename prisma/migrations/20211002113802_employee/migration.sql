@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE `employee` ADD COLUMN `id` INTEGER NOT NULL AUTO_INCREMENT,
-    ADD PRIMARY KEY (`id`);
