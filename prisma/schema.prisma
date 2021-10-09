@@ -15,18 +15,17 @@ generator client {
 
 model Employee{
   id Int @default(autoincrement()) @id
-  rfid_card_no String @default("S")
+  rfid_card_no String @default("0")
   employee_code String @unique 
-  employee_name String
+  employee_name String 
   entry_made_on String
-  employee_photo String
+  employee_photo String @default("0")
   entry_added_by String 
-
   employee_grade String
   work_location String
   vehicle_group String
   experience_status String
-  years_of_experience String
+  years_of_experience String @default("0")
   education String
   mobile_no String
   mobile_relation String
@@ -42,21 +41,17 @@ model Employee{
   bank_branch String
   passbook_photo String
   aadhar_no String
-  pay_scale_term String
-  pay_scale String
-  pay_scale_type String
-  payscale_per_hour String 
+  pay_scale_term String @default("0")
+  pay_scale String @default("0")
+  pay_scale_type String @default("0")
+  payscale_per_hour String @default("0")
 
 }
 
 
 model Attendance{
   id Int @default(autoincrement()) @id
-  tmno Int
-  employee_code String
-  employee_name String
-  gmno Int 
-  mode Int
-  date String
-  time String
+  rfid_card_no String
+  punch_time String
+ 
 }
