@@ -2,6 +2,25 @@ import Prisma from '@prisma/client';
 import express from 'express';
 import moment from 'moment';
 import cors from 'cors'
+import xlsxj from 'xlsx-to-json'
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { rejects } from 'assert';
+
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, './uploads')
+  },
+  filename(req, file, cb) {
+    cb(null, `${file.originalname}`)
+  }
+})
+
+
+
+const upload = multer({ storage: storage })
+
 const { PrismaClient } = Prisma;
 
 const app = express();
@@ -31,20 +50,19 @@ app.get('/getdata/:employeecode', async (req, res) => {
 
   try {
     const employee = await prisma.employee.findFirst({
-      where:{
+      where: {
         employee_code: employeecode
       }
     })
 
-    if(!employee){
+    if (!employee) {
       throw "Employee Not Found";
     }
 
-    res.send({ status:"success", message:"Employee Found", data: employee})
+    res.send({ status: "success", message: "Employee Found", data: employee })
   }
-  catch(error)
-  {
-    res.send({ status:"error", message:"Employee Not Found", data: error})
+  catch (error) {
+    res.send({ status: "error", message: "Employee Not Found", data: error })
   }
 
 })
@@ -55,8 +73,7 @@ app.post('/', async (req, res) => {
 
   console.log(data);
   try {
-    const dat = moment(data.entry_made_on, 'YYYY-MM-DD HH:mm:ss');
-    data.entry_made_on = moment(dat).format('YYYY-MM-DD HH:mm:ss');
+
     const user = await prisma.employee.create({
       data: {
         ...data
@@ -72,6 +89,54 @@ app.post('/', async (req, res) => {
   }
 })
 
+const addUser = async (data) =>{
+  return new Promise(async (resolve,reject)=>{
+    try {
+      const user = await prisma.employee.create({
+        data: {
+          ...data
+        }
+        
+      })
+      resolve({status:"Success"})
+    } catch (err) {
+      resolve({status:"Fail"})
+    }
+
+  })
+}
+
+app.post('/massupload', upload.single('file'), (req, res, next) => {
+  const __dirname = path.resolve();
+
+  xlsxj({
+    input: path.join(__dirname, '/uploads/Fe.xlsx'),
+    output: "output.json"
+  }, async function (err, result) {
+    if (err) {
+      console.error(err);
+    } else {
+
+      const failedEntries = []
+
+      for(let i = 0;i < result.length;i++)
+      {
+        const status = await addUser(result[i])
+        console.log(status);
+
+        if(status.status == 'Fail'){
+          failedEntries.push(result[i])
+        }
+        
+      }
+
+      res.json({message:"success",failedEntries:failedEntries})
+    }
+  });
+
+})
+
+
 
 app.put('/', async (req, res) => {
 
@@ -84,8 +149,12 @@ app.delete('/:id', async (req, res) => {
 
 
 // Adding attendence
-app.post('/attendance',(req,res)=>{
-  console.log(res)
+app.post('/attendance', (req, res) => {
+
+
+  const { rfid, date, time } = req.query
+
+  console.log(rfid, date, time);
   res.send("Api Called")
 })
 
