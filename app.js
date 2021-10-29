@@ -89,18 +89,18 @@ app.post('/', async (req, res) => {
   }
 })
 
-const addUser = async (data) =>{
-  return new Promise(async (resolve,reject)=>{
+const addUser = async (data) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const user = await prisma.employee.create({
         data: {
           ...data
         }
-        
+
       })
-      resolve({status:"Success"})
+      resolve({ status: "Success" })
     } catch (err) {
-      resolve({status:"Fail"})
+      resolve({ status: "Fail" })
     }
 
   })
@@ -119,18 +119,17 @@ app.post('/massupload', upload.single('file'), (req, res, next) => {
 
       const failedEntries = []
 
-      for(let i = 0;i < result.length;i++)
-      {
+      for (let i = 0; i < result.length; i++) {
         const status = await addUser(result[i])
         console.log(status);
 
-        if(status.status == 'Fail'){
+        if (status.status == 'Fail') {
           failedEntries.push(result[i])
         }
-        
+
       }
 
-      res.json({message:"success",failedEntries:failedEntries})
+      res.json({ message: "success", failedEntries: failedEntries })
     }
   });
 
@@ -149,15 +148,57 @@ app.delete('/:id', async (req, res) => {
 
 
 // Adding attendence
-app.post('/attendance', (req, res) => {
-
-
-  const { rfid, date, time } = req.query
-
-  console.log(rfid, date, time);
-  res.send("Api Called")
+app.post('/attendance', async (req, res) => {
+  const { rfid_card_no ,punch_time } = req.body
+  console.log(rfid_card_no);
+  try {
+    const user = await prisma.attendance.create({
+      data: {
+        rfid_card_no: rfid_card_no,
+        punch_time: punch_time,
+      }
+    })
+    res.json({ status: "success", message: "Attendance Added Successfully", data: user })
+  } catch (error) {
+    console.log(error);
+    res.send({ status: "error", message: "Something is Wrong", error: error })
+  }
 })
 
+app.get('/attendance',async(req,res)=>{
+  const { rfid_card_no } = req.body
+
+  console.log(rfid_card_no);
+  try {
+    const users = await prisma.attendance.findMany({
+      where: {
+        rfid_card_no: String(rfid_card_no)
+      }
+    })
+    res.json(users)
+  }
+  catch (error) {
+    res.json(error)
+  }
+})
+
+
+// Incentives/Penalty
+
+app.post('/perks',async(req,res)=>{
+  console.log(data);
+  try {
+    const user = await prisma.perks.create({
+      data: {
+        ...data
+      }
+    })
+    res.json({ status: "success", message: "Perks Added Successfully", data: user })
+  } catch (error) {
+    res.json({ status: "error", message: "Something is Wrong", error: error })
+  }
+
+})
 
 
 
