@@ -52,15 +52,24 @@ model Employee{
 model Attendance{
   id Int @default(autoincrement()) @id
   rfid_card_no String
-  punch_time String
+  date String
+  timestamp String
  
 }
 
 model Perks{
   id Int @default(autoincrement()) @id
   date String
-  employee_no String
-  average_packs String
-  actual_packs String
-  comments String
+  employee_code String
+  penalty_value String
+  penalty_description String
 }
+
+model Payscale{
+  id Int @default(autoincrement()) @id
+  employee_grade String 
+  pay_scale_term String
+  pay_scale_type String
+  pay_scale String
+}
+

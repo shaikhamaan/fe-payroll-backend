@@ -6,7 +6,12 @@ import xlsxj from 'xlsx-to-json'
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import PDFDocument from 'pdfkit'
 import { rejects } from 'assert';
+import getSalaryData from './salarydata.js'
+import generatePDF from './calculator.js';
+import getReportByDate from './dailyReport.js';
+import getReportByMonth from './monthReport.js';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -121,7 +126,7 @@ app.post('/massupload', upload.single('file'), (req, res, next) => {
 
       for (let i = 0; i < result.length; i++) {
         const status = await addUser(result[i])
-        console.log(status);
+
 
         if (status.status == 'Fail') {
           failedEntries.push(result[i])
@@ -149,13 +154,19 @@ app.delete('/:id', async (req, res) => {
 
 // Adding attendence
 app.post('/attendance', async (req, res) => {
-  const { rfid_card_no ,punch_time } = req.body
-  console.log(rfid_card_no);
+  const { rfid_card_no, date, time } = req.body
+
+  const newDate = moment(date).format('YYYY-MM-DD');
+  const dateTime = new Date(`${date} ${time}`)
+
+  const timestamp = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
+
   try {
     const user = await prisma.attendance.create({
       data: {
         rfid_card_no: rfid_card_no,
-        punch_time: punch_time,
+        date: String(newDate),
+        timestamp: String(timestamp)
       }
     })
     res.json({ status: "success", message: "Attendance Added Successfully", data: user })
@@ -165,7 +176,7 @@ app.post('/attendance', async (req, res) => {
   }
 })
 
-app.get('/attendance',async(req,res)=>{
+app.get('/attendance', async (req, res) => {
   const { rfid_card_no } = req.body
 
   console.log(rfid_card_no);
@@ -183,17 +194,46 @@ app.get('/attendance',async(req,res)=>{
 })
 
 
+
+app.get('/getsalary', generatePDF, async (req, res) => {
+
+  res.send('<H1> Unable to generate pdf receipt, please enter valid details..... </H1>')
+  
+
+})
+
+
+
 // Incentives/Penalty
 
-app.post('/perks',async(req,res)=>{
-  console.log(data);
+app.post('/perks', async (req, res) => {
+ const  { date, employee_code, penalty_value, penalty_description } = req.body
+ const newDate = moment(date).format('YYYY-MM-DD');
   try {
     const user = await prisma.perks.create({
+      data: {
+        date: String(newDate),
+        employee_code:employee_code,
+        penalty_value: penalty_value,
+        penalty_description: penalty_description
+      }
+    })
+    res.json({ status: "success", message: "Penalty Added Successfully", data: user })
+  } catch (error) {
+    res.json({ status: "error", message: "Something is Wrong", error: error })
+  }
+
+})
+
+app.post('/payscale', async (req, res) => {
+  const data = req.body;
+  try {
+    const user = await prisma.payscale.create({
       data: {
         ...data
       }
     })
-    res.json({ status: "success", message: "Perks Added Successfully", data: user })
+    res.json({ status: "success", message: "Payscale Added Successfully", data: user })
   } catch (error) {
     res.json({ status: "error", message: "Something is Wrong", error: error })
   }
@@ -201,9 +241,54 @@ app.post('/perks',async(req,res)=>{
 })
 
 
+app.get('/report',getReportByDate,(req,res,next)=>{
+
+  res.send({ status: "error", message: "Something is Wrong"})
+
+})
+
+app.get('/month',getReportByMonth,(req,res,next) => {
+  res.send({ status : "error", message: "Something is wrong"})
+})
+
+
 
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
-  console.log('Server Started');
+  console.log(`Server Started at ${port}`);
 })
+
+
+
+
+// pdf generation
+
+app.get('/pdf', (req, res) => {
+  const filename = `Receipt.pdf`;
+  const doc = new PDFDocument({ size: [420, 720], bufferPages: true });
+  const stream = res.writeHead(200, {
+    'Content-Type': 'application/pdf',
+    'Content-disposition': `attachment;filename=${filename}`,
+  });
+  doc.on('data', (chunk) => stream.write(chunk));
+  doc.on('end', () => stream.end());
+
+  doc.font('Times-Roman')
+    .fontSize(12)
+    .text(`this is a test text`);
+  doc.end();
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
