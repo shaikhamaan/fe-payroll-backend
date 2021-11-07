@@ -8,7 +8,7 @@ import path from 'path';
 import fs from 'fs';
 import PDFDocument from 'pdfkit'
 import { rejects } from 'assert';
-import getSalaryData from './salarydata.js'
+import getSalaryData from './salaryData.js'
 import generatePDF from './calculator.js';
 import getReportByDate from './dailyReport.js';
 import getReportByMonth from './monthReport.js';

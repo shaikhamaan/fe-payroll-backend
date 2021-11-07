@@ -2,7 +2,7 @@ import Prisma from '@prisma/client';
 
 import moment from 'moment';
 
-import getSalaryData from './salarydata.js'
+import getSalaryData from './salaryData.js'
 
 import PDFDocument from 'pdfkit'
 
