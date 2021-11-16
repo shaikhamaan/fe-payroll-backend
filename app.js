@@ -12,6 +12,7 @@ import getSalaryData from './salaryData.js'
 import generatePDF from './calculator.js';
 import getReportByDate from './dailyReport.js';
 import getReportByMonth from './monthReport.js';
+import massSalaryData from './massSalaryData.js';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -232,6 +233,10 @@ app.get('/getsalary', generatePDF, async (req, res) => {
   res.send('<H1> Unable to generate pdf receipt, please enter valid details..... </H1>')
   
 
+})
+
+app.post('/masssalary',massSalaryData , async(req,res) =>{
+  res.send('<H1> Unable to process your query, please enter valid details..... </H1>')
 })
 
 

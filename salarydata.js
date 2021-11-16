@@ -70,7 +70,8 @@ const getSalaryData = async (employee_code, startDate, endDate) => {
             const lateEnd = moment(end).format('YYYY-MM-DD HH:mm:ss');
             extra_hours += moment.duration(moment(lateEnd).diff(moment(lateStart))).asHours();
         }
-
+        
+        if(salaryData.length > 0)
         salaryDetails.push([date, ...salaryData]);
 
 
@@ -106,7 +107,7 @@ const getSalaryData = async (employee_code, startDate, endDate) => {
         employee_code: employee_code,
         employee_name: data.employee_name,
         employee_grade: data.employee_grade,
-        pey_scale_term: pay.pay_scale_term,
+        pay_scale_term: pay.pay_scale_term,
         penalty_points: penalty_points,
         pay_scale: pay.pay_scale,
         startdate: startDate, enddate: endDate, 

@@ -66,7 +66,7 @@ const generatePDF = async (req, res, next) => {
   down(doc,0.5)
   doc.text(`Employee Grade : ${String(salary.employee_grade)}`)
   down(doc,0.5)
-  doc.text(`Pay Scale Term : ${String(salary.pey_scale_term)}`)
+  doc.text(`Pay Scale Term : ${String(salary.pay_scale_term)}`)
   down(doc,0.5)
   doc.text(`Pay Scale  : ${String(salary.pay_scale)}`)
   doc.moveDown()
