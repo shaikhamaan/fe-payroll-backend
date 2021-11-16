@@ -94,6 +94,32 @@ app.post('/', async (req, res) => {
   }
 })
 
+
+app.post('/update', async (req, res) => {
+  const data = req.body;
+
+  console.log(data);
+  try {
+
+    const user = await prisma.employee.create({
+      where:{
+        employee_code: data.employee_code
+      },
+      data: {
+        ...data
+      }
+    })
+
+    console.log('Added');
+    res.json({ status: "success", message: "Employee Added Successfully", data: user })
+  }
+  catch (err) {
+    console.log(err);
+    res.send({ status: "error", message: "Something is Wrong", error: err })
+  }
+})
+
+
 const addUser = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -110,6 +136,10 @@ const addUser = async (data) => {
 
   })
 }
+
+
+
+// Mass Upload
 
 app.post('/massupload', upload.single('file'), (req, res, next) => {
   const __dirname = path.resolve();
@@ -195,6 +225,8 @@ app.get('/attendance', async (req, res) => {
 
 
 
+// Salary Receipt
+
 app.get('/getsalary', generatePDF, async (req, res) => {
 
   res.send('<H1> Unable to generate pdf receipt, please enter valid details..... </H1>')
@@ -205,7 +237,6 @@ app.get('/getsalary', generatePDF, async (req, res) => {
 
 
 // Incentives/Penalty
-
 app.post('/perks', async (req, res) => {
  const  { date, employee_code, penalty_value, penalty_description } = req.body
  const newDate = moment(date).format('YYYY-MM-DD');
@@ -241,7 +272,7 @@ app.post('/payscale', async (req, res) => {
 })
 
 
-app.get('/report',getReportByDate,(req,res,next)=>{
+app.post('/report',getReportByDate,(req,res,next)=>{
 
   res.send({ status: "error", message: "Something is Wrong"})
 
@@ -259,27 +290,6 @@ app.listen(port, () => {
   console.log(`Server Started at ${port}`);
 })
 
-
-
-
-// pdf generation
-
-app.get('/pdf', (req, res) => {
-  const filename = `Receipt.pdf`;
-  const doc = new PDFDocument({ size: [420, 720], bufferPages: true });
-  const stream = res.writeHead(200, {
-    'Content-Type': 'application/pdf',
-    'Content-disposition': `attachment;filename=${filename}`,
-  });
-  doc.on('data', (chunk) => stream.write(chunk));
-  doc.on('end', () => stream.end());
-
-  doc.font('Times-Roman')
-    .fontSize(12)
-    .text(`this is a test text`);
-  doc.end();
-
-})
 
 
 

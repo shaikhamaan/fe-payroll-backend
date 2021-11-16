@@ -10,7 +10,12 @@ const db = new PrismaClient();
 
 const getReportByDate = async (req,res,next) => {
 
-    const { date } = req.body
+    var { date } = req.body
+
+
+    date = moment(date).format("YYYY-MM-DD")
+    console.log(date);
+    
 
     let departments 
 
@@ -35,7 +40,7 @@ const getReportByDate = async (req,res,next) => {
         result = result.concat(data)
     }
 
-    res.send({date:date, report : result})
+    res.send(result)
     
 
 }
@@ -75,6 +80,7 @@ const getReportByDepartment = async (department, date) => {
         })
 
         const rowData = {
+            department:department,
             employee_code:"",
             employee_name:"",
             rfid_card_no:"",
@@ -139,12 +145,9 @@ const getReportByDepartment = async (department, date) => {
         data.push(rowData)
     }
 
-    //return data
+    
 
-    return {
-        department: department,
-        data : data 
-    }
+    return data
 
 
 }
