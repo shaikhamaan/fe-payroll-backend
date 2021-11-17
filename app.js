@@ -8,11 +8,11 @@ import path from 'path';
 import fs from 'fs';
 import PDFDocument from 'pdfkit'
 import { rejects } from 'assert';
-import getSalaryData from './salaryData.js'
-import generatePDF from './calculator.js';
-import getReportByDate from './dailyReport.js';
-import getReportByMonth from './monthReport.js';
-import massSalaryData from './massSalaryData.js';
+import getSalaryData from './assets/salaryData.js'
+import generatePDF from './assets/generatePdf.js';
+import getReportByDate from './assets/dailyReport.js';
+import getReportByMonth from './assets/monthReport.js';
+import massSalaryData from './assets/massSalaryData.js';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -102,8 +102,8 @@ app.post('/update', async (req, res) => {
   console.log(data);
   try {
 
-    const user = await prisma.employee.create({
-      where:{
+    const user = await prisma.employee.update({
+      where: {
         employee_code: data.employee_code
       },
       data: {
@@ -231,11 +231,11 @@ app.get('/attendance', async (req, res) => {
 app.get('/getsalary', generatePDF, async (req, res) => {
 
   res.send('<H1> Unable to generate pdf receipt, please enter valid details..... </H1>')
-  
+
 
 })
 
-app.post('/masssalary',massSalaryData , async(req,res) =>{
+app.post('/masssalary', massSalaryData, async (req, res) => {
   res.send('<H1> Unable to process your query, please enter valid details..... </H1>')
 })
 
@@ -243,13 +243,13 @@ app.post('/masssalary',massSalaryData , async(req,res) =>{
 
 // Incentives/Penalty
 app.post('/perks', async (req, res) => {
- const  { date, employee_code, penalty_value, penalty_description } = req.body
- const newDate = moment(date).format('YYYY-MM-DD');
+  const { date, employee_code, penalty_value, penalty_description } = req.body
+  const newDate = moment(date).format('YYYY-MM-DD');
   try {
     const user = await prisma.perks.create({
       data: {
         date: String(newDate),
-        employee_code:employee_code,
+        employee_code: employee_code,
         penalty_value: penalty_value,
         penalty_description: penalty_description
       }
@@ -263,28 +263,58 @@ app.post('/perks', async (req, res) => {
 
 app.post('/payscale', async (req, res) => {
   const data = req.body;
+
+
   try {
-    const user = await prisma.payscale.create({
+    const previousData = await prisma.payscale.findFirst({
+      where: {
+        employee_grade: data.employee_grade,
+        pay_scale_term: data.pay_scale_term,
+        pay_scale_type: data.pay_scale_type
+      }
+    })
+
+    if (previousData) {
+      try {
+        const grade = await prisma.payscale.deleteMany({
+          where: {
+            employee_grade: data.employee_grade,
+            pay_scale_term: data.pay_scale_term,
+            pay_scale_type: data.pay_scale_type
+          }
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  } catch (error) {
+    res.send(error)
+  }
+
+  try {
+    const grade = await prisma.payscale.create({
       data: {
         ...data
       }
     })
-    res.json({ status: "success", message: "Payscale Added Successfully", data: user })
+    res.json({ status: "success", message: "Payscale Added Successfully", data: grade })
   } catch (error) {
+    console.log(error);
     res.json({ status: "error", message: "Something is Wrong", error: error })
   }
 
 })
 
 
-app.post('/report',getReportByDate,(req,res,next)=>{
+app.post('/report', getReportByDate, (req, res, next) => {
 
-  res.send({ status: "error", message: "Something is Wrong"})
+  res.send({ status: "error", message: "Something is Wrong" })
 
 })
 
-app.get('/month',getReportByMonth,(req,res,next) => {
-  res.send({ status : "error", message: "Something is wrong"})
+app.get('/month', getReportByMonth, (req, res, next) => {
+  res.send({ status: "error", message: "Something is wrong" })
 })
 
 

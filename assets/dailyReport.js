@@ -81,43 +81,30 @@ const getReportByDepartment = async (department, date) => {
 
         const rowData = {
             department:department,
-            employee_code:"",
-            employee_name:"",
-            rfid_card_no:"",
-            arrival_time:"",
-            late_time:"",
-            dept_time:"",
-            early_time:"",
-            working_hrs:"",
-            over_time:"",
-            status:"",
-            remarks:""
+            employee_code:"-",
+            employee_name:"-",
+            rfid_card_no:"-",
+            arrival_time:"00.00",
+            late_time:"00.00",
+            dept_time:"00.00",
+            early_time:"00.00",
+            working_hrs:"0",
+            over_time:"0",
+            status:"A",
+            remarks:"Absent"
         }
         rowData.employee_name = employees[i].employee_name
         rowData.employee_code = employees[i].employee_code
         rowData.rfid_card_no = employees[i].rfid_card_no
-        
-
-        
-        
+                
         if (attendance.length == 0) {
-            rowData.status = "A"
-            rowData.remarks = "Absent"
-            rowData.arrival_time = "00.00"
-            rowData.late_time = "00.00"
-            rowData.dept_time = "00.00"
-            rowData.early_time = "00.00"
-            rowData.over_time = "0"
+            
         }
         else if(attendance.length == 1)
         {
             rowData.status = "P",
             rowData.remarks = "Odd Punch"
             rowData.arrival_time = attendance[0].timestamp
-            rowData.late_time = "00.00"
-            rowData.dept_time = "00.00"
-            rowData.early_time = "00.00"
-            rowData.over_time = "0"
         }
         else
         {
@@ -125,12 +112,16 @@ const getReportByDepartment = async (department, date) => {
             rowData.remarks = "Present"
             rowData.arrival_time = attendance[0].timestamp
             rowData.dept_time = attendance[1].timestamp
-            rowData.late_time = "00.00"
-            rowData.early_time = "00.00"
-            rowData.over_time = "0"
+
+            const start = new Date(attendance[0].timestamp);
+            const end = new Date(attendance[1].timestamp);
+            const startTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
+            const endTime = moment(end).format('YYYY-MM-DD HH:mm:ss');
+
+            rowData.working_hrs = moment.duration(moment(endTime).diff(moment(startTime))).asHours();
+            
         }
-
-
+        
         // Overtime
 
         if(attendance.length > 3){
