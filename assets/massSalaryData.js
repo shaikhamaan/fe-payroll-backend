@@ -31,7 +31,7 @@ const massSalaryData = async (req, res, next) => {
             }
         })
     } catch (error) {
-        //res.send(error)
+        
         next()
         return { status: "error", error: error }
     }
@@ -56,7 +56,7 @@ const massSalaryData = async (req, res, next) => {
             })
 
         } catch (error) {
-
+            console.log(error);
         }
     }
 
