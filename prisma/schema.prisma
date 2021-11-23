@@ -73,14 +73,10 @@ model Payscale{
   pay_scale String
 }
 
-model Admin{
+model User{
   id Int @default(autoincrement())
   username String @unique
   password String
+  role String
 }
 
-model Supervisor{
-  id Int @default(autoincrement())
-  username String @unique
-  password String
-}

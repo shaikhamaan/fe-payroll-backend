@@ -319,54 +319,17 @@ app.post('/month', getReportByMonth, (req, res, next) => {
 })
 
 
-app.post('/authadmin',async(req,res)=>{
-  const { username , password } = req.body
 
-  try {
-    const user = await prisma.admin.findFirst({
-      where: {
-        username: username,
-      }
-    })
-
-    const p  = user.password
-    
-    const verify = await bcrypt.compare(password,p)
-
-    if(verify){
-      res.send({
-        status: "success",
-        message: "Login Successful",
-      })
-    }
-    else
-    {
-      res.send({
-        status: "error",
-        message: "Invalid Credentials"
-      })
-    }
-  }
-  catch (error) {
-    res.send({
-      status: "error",
-      message: "Something is Wrong",
-      error: error
-    })
-  }
-
-})
-
-
-app.post('/newadmin',async(req,res)=>{
-  console.log("hi");
-  const {username,password}=req.body;
+app.post('/newuser',async(req,res)=>{
+  
+  const {username,password, role}=req.body;
   try {
     const p = await bcrypt.hash(password, 10);
-    const user = await prisma.admin.create({
+    const user = await prisma.user.create({
       data: {
         username: username,
-        password: p
+        password: p,
+        role: role
       }
     })
     res.send({ status : "success", message: "Admin Added Successfully", data: user })
@@ -377,11 +340,11 @@ app.post('/newadmin',async(req,res)=>{
 
 
 
-app.post('/authsupervisor',async(req,res)=>{
+app.post('/authuser',async(req,res)=>{
   const { username , password } = req.body
 
   try {
-    const user = await prisma.supervisor.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         username: username,
       }
@@ -394,6 +357,7 @@ app.post('/authsupervisor',async(req,res)=>{
     if(verify){
       res.send({
         status: "success",
+        role: user.role,
         message: "Login Successful",
       })
     }
@@ -414,25 +378,6 @@ app.post('/authsupervisor',async(req,res)=>{
   }
 
 })
-
-
-app.post('/newsupervisor',async(req,res)=>{
-  console.log("hi");
-  const {username,password}=req.body;
-  try {
-    const p = await bcrypt.hash(password, 10);
-    const user = await prisma.supervisor.create({
-      data: {
-        username: username,
-        password: p
-      }
-    })
-    res.send({ status : "success", message: "supervisor Added Successfully", data: user })
-  } catch (error) {
-    res.send({ status: "error", message: "User already exist or Server Error" })
-  }
-})
-
 
 
 
