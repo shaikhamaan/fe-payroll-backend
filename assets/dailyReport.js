@@ -84,10 +84,10 @@ const getReportByDepartment = async (department, date) => {
             employee_code:"-",
             employee_name:"-",
             rfid_card_no:"-",
-            arrival_time:"00.00",
-            late_time:"00.00",
-            dept_time:"00.00",
-            early_time:"00.00",
+            arrival_time:"00:00:00",
+            late_time:"00:00:00",
+            dept_time:"00:00:00",
+            early_time:"00:00:00",
             working_hrs:"0",
             over_time:"0",
             status:"A",
@@ -104,14 +104,14 @@ const getReportByDepartment = async (department, date) => {
         {
             rowData.status = "P",
             rowData.remarks = "Odd Punch"
-            rowData.arrival_time = attendance[0].timestamp
+            rowData.arrival_time = timeFormat(attendance[0].timestamp)
         }
         else
         {
             rowData.status = "P",
             rowData.remarks = "Present"
-            rowData.arrival_time = attendance[0].timestamp
-            rowData.dept_time = attendance[1].timestamp
+            rowData.arrival_time = timeFormat(attendance[0].timestamp)
+            rowData.dept_time = timeFormat(attendance[1].timestamp)
 
             const start = new Date(attendance[0].timestamp);
             const end = new Date(attendance[1].timestamp);
@@ -141,6 +141,10 @@ const getReportByDepartment = async (department, date) => {
     return data
 
 
+}
+
+const timeFormat = (time) => {
+    return moment(time).format('HH:mm:ss')
 }
 
 

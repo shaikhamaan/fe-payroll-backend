@@ -4,6 +4,7 @@ import moment from 'moment';
 import cors from 'cors'
 import xlsxj from 'xlsx-to-json'
 import multer from 'multer';
+import bcrypt from 'bcryptjs';
 import path from 'path';
 import fs from 'fs';
 import PDFDocument from 'pdfkit'
@@ -112,7 +113,7 @@ app.post('/update', async (req, res) => {
     })
 
     console.log('Added');
-    res.json({ status: "success", message: "Employee Added Successfully", data: user })
+    res.json({ status: "success", message: "Employee Data Update Successfully", data: user })
   }
   catch (err) {
     console.log(err);
@@ -313,9 +314,127 @@ app.post('/report', getReportByDate, (req, res, next) => {
 
 })
 
-app.get('/month', getReportByMonth, (req, res, next) => {
+app.post('/month', getReportByMonth, (req, res, next) => {
   res.send({ status: "error", message: "Something is wrong" })
 })
+
+
+app.post('/authadmin',async(req,res)=>{
+  const { username , password } = req.body
+
+  try {
+    const user = await prisma.admin.findFirst({
+      where: {
+        username: username,
+      }
+    })
+
+    const p  = user.password
+    
+    const verify = await bcrypt.compare(password,p)
+
+    if(verify){
+      res.send({
+        status: "success",
+        message: "Login Successful",
+      })
+    }
+    else
+    {
+      res.send({
+        status: "error",
+        message: "Invalid Credentials"
+      })
+    }
+  }
+  catch (error) {
+    res.send({
+      status: "error",
+      message: "Something is Wrong",
+      error: error
+    })
+  }
+
+})
+
+
+app.post('/newadmin',async(req,res)=>{
+  console.log("hi");
+  const {username,password}=req.body;
+  try {
+    const p = await bcrypt.hash(password, 10);
+    const user = await prisma.admin.create({
+      data: {
+        username: username,
+        password: p
+      }
+    })
+    res.send({ status : "success", message: "Admin Added Successfully", data: user })
+  } catch (error) {
+    res.send({ status: "error", message: "User already exist or Server Error" })
+  }
+})
+
+
+
+app.post('/authsupervisor',async(req,res)=>{
+  const { username , password } = req.body
+
+  try {
+    const user = await prisma.supervisor.findFirst({
+      where: {
+        username: username,
+      }
+    })
+
+    const p  = user.password
+    
+    const verify = await bcrypt.compare(password,p)
+
+    if(verify){
+      res.send({
+        status: "success",
+        message: "Login Successful",
+      })
+    }
+    else
+    {
+      res.send({
+        status: "error",
+        message: "Invalid Credentials"
+      })
+    }
+  }
+  catch (error) {
+    res.send({
+      status: "error",
+      message: "Something is Wrong",
+      error: error
+    })
+  }
+
+})
+
+
+app.post('/newsupervisor',async(req,res)=>{
+  console.log("hi");
+  const {username,password}=req.body;
+  try {
+    const p = await bcrypt.hash(password, 10);
+    const user = await prisma.supervisor.create({
+      data: {
+        username: username,
+        password: p
+      }
+    })
+    res.send({ status : "success", message: "supervisor Added Successfully", data: user })
+  } catch (error) {
+    res.send({ status: "error", message: "User already exist or Server Error" })
+  }
+})
+
+
+
 
 
 
