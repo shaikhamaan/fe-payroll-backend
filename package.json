@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
-    "heroku-postbuild": "npx prisma db push",
+    "heroku-postbuild": "npx prisma db push --accept-data-loss",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
