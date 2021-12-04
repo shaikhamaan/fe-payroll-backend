@@ -2,6 +2,7 @@ import Prisma from '@prisma/client';
 import express from 'express';
 import moment from 'moment';
 import cors from 'cors'
+import pg from 'pg'
 import xlsxj from 'xlsx-to-json'
 import multer from 'multer';
 import bcrypt from 'bcryptjs';
