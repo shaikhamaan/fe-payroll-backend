@@ -14,6 +14,7 @@ import generatePDF from './assets/generatePdf.js';
 import getReportByDate from './assets/dailyReport.js';
 import getReportByMonth from './assets/monthReport.js';
 import massSalaryData from './assets/massSalaryData.js';
+import bot from './TelegramBot/server.js'
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {

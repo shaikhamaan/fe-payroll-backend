@@ -80,3 +80,11 @@ model User{
   role String
 }
 
+
+model Telegram{
+  id Int @default(autoincrement())
+  employee_code String @unique
+  rfid_card_no String
+  telegramid String
+  subscribe String @default("true")
+}
