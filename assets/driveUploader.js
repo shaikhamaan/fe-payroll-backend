@@ -10,8 +10,8 @@ const uploadFile = async (filename, mimetype, data) => {
         mimeType: mimetype,
       },
       media: {
-        mimeType: "image/jpg",
-        body: fs.createReadStream(data),
+        mimeType: mimetype,
+        body: data,
       },
     });
     const key = result.data.id;
