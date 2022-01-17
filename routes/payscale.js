@@ -28,9 +28,7 @@ route.post("/", async (req, res) => {
             pay_scale_type: data.pay_scale_type,
           },
         });
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     }
   } catch (error) {
     res.send(error);
@@ -48,7 +46,6 @@ route.post("/", async (req, res) => {
       data: grade,
     });
   } catch (error) {
-    console.log(error);
     res.json({ status: "error", message: "Something is Wrong", error: error });
   }
 });

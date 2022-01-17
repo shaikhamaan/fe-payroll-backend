@@ -21,7 +21,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 route.get("/", async (req, res) => {
-  console.log("call");
   try {
     const users = await prisma.employee.findMany();
     res.json(users);
@@ -32,7 +31,6 @@ route.get("/", async (req, res) => {
 
 route.get("/getdata/:employeecode", async (req, res) => {
   const { employeecode } = req.params;
-  console.log(employeecode);
 
   try {
     const employee = await prisma.employee.findFirst({
@@ -54,7 +52,6 @@ route.get("/getdata/:employeecode", async (req, res) => {
 route.post("/", async (req, res) => {
   const data = req.body;
 
-  console.log(data);
   try {
     const user = await prisma.employee.create({
       data: {
@@ -62,14 +59,12 @@ route.post("/", async (req, res) => {
       },
     });
 
-    console.log("Added");
     res.json({
       status: "success",
       message: "Employee Added Successfully",
       data: user,
     });
   } catch (err) {
-    console.log(err);
     res.send({ status: "error", message: "Something is Wrong", error: err });
   }
 });
@@ -87,14 +82,12 @@ route.post("/update", async (req, res) => {
       },
     });
 
-    console.log("Added");
     res.json({
       status: "success",
       message: "Employee Data Update Successfully",
       data: user,
     });
   } catch (err) {
-    console.log(err);
     res.send({ status: "error", message: "Something is Wrong", error: err });
   }
 });
@@ -125,7 +118,6 @@ route.post("/massupload", upload.single("file"), (req, res, next) => {
     },
     async function (err, result) {
       if (err) {
-        console.error(err);
       } else {
         const failedEntries = [];
 

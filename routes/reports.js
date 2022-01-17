@@ -6,7 +6,7 @@ import massSalaryData from "../assets/massSalaryData.js";
 
 const route = express.Router();
 
-route.post("/report", getReportByDate, (req, res, next) => {
+route.post("/day", getReportByDate, (req, res, next) => {
   res.send({ status: "error", message: "Something is Wrong" });
 });
 

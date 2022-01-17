@@ -6,6 +6,7 @@ import payscale from "./routes/payscale.js";
 import awards from "./routes/awards.js";
 import users from "./routes/users.js";
 import reports from "./routes/reports.js";
+import bot from "./TelegramBot/server.js";
 
 const app = express();
 
