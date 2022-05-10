@@ -15,3 +15,41 @@ solution for Companies to enable RFID enabled attendance management system.
 -  capture features for the supervisor to fill in details about why he/she is awarding an incentive or penalising an employee.
 -  Web-application to incorporate salary calculation logic used by FE, to auto-calculate each employee's weekly salary. If possible, auto-generate employee-wise downloadable salary statements.
 
+**Backend Stack Details**
+- Node.js (Backend Scripting)
+- PostgreSQL (Database)
+- Telegraf (Official Telegram SDK for Node.js) <a href="https://core.telegram.org/bots/api"> API Reference </a> 
+
+
+
+**Functionalities**
+ - Adding New Employees
+ - Manage all employee data
+ - Adding attendence through RFID Card (By Calling API)
+ - Employee Attendence Reports
+ - Employee Salary Reports
+ - Employee Payslip generation
+ - Send Notifications to the employees using Telegram Bot
+
+ 
+ # How to install
+  - Initial Installation Requirements
+    - Node.js (Latest Stable Version) <a href="https://nodejs.org/en/download/">Node.js</a>
+    - PostgreSQL Database <a href="https://www.postgresql.org/download/">PostgreSQL</a>
+  
+ 
+## Installation
+Install All npm dependencies
+```bash
+  npm install 
+```
+
+Run Project using npm:
+If it is localhost then it will start at port 5000 
+For deployments we need to mention PORT in the environment variables
+```bash
+  npm start
+```
+ 
+ 
+ 
