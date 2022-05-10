@@ -51,5 +51,25 @@ For deployments we need to mention PORT in the environment variables
   npm start
 ```
  
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`BOT_TOKEN` - Telegram Bot Token received from BotFather <a href="https://sendpulse.com/knowledge-base/chatbot/create-telegram-chatbot"> Reference </a>
+
+`DATABASE_URL` - PotgreSQL Database URL for connection
+
+
+# API Reference
+Postman Collection Link : https://www.getpostman.com/collections/314d477d8aee8d4d36ca
+
+Reference URL: https://documenter.getpostman.com/view/14607817/Uyxeq8sx
+
+ - Mass Upload Sample file: See Fe.xlsx in uploads folder
+
+
+
+
  
  
